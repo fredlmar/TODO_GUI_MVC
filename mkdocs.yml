@@ -7,3 +7,9 @@ nav:
       - Controller: controller.md
 theme:
   name: material
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python: {}
