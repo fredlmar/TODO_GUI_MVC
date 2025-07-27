@@ -1,0 +1,9 @@
+site_name: To-Do GUI MVC
+nav:
+  - Home: index.md
+  - Modules:
+      - Model: model.md
+      - View: view.md
+      - Controller: controller.md
+theme:
+  name: material
