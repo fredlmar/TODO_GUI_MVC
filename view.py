@@ -22,6 +22,9 @@ class TaskView(tk.Frame):
         self.delete_button = tk.Button(self, text="Delete Selected Task", command=self.controller.delete_task)
         self.delete_button.pack()
 
+        self.save_button = tk.Button(self, text="Save Tasks", command=self.controller.save_tasks)
+        self.save_button.pack()
+
     def get_input(self):
         return self.task_entry.get()
 

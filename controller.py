@@ -7,6 +7,7 @@ from tkinter import messagebox
 class TaskController:
     def __init__(self, root):
         self.model = TaskModel()
+        self.model.load_tasks()
         self.view = TaskView(root, self)
         self.view.update_tasks(self.model.get_tasks())
 
@@ -23,3 +24,10 @@ class TaskController:
             self.view.update_tasks(self.model.get_tasks())
         else:
             messagebox.showwarning("No selection", "Please select a task to delete.")
+
+    def save_tasks(self):
+        success = self.model.save_tasks()
+        if success:
+            messagebox.showinfo("Tasks Saved", "All tasks have been saved successfully.")
+        else:
+            messagebox.showerror("Save Failed", "Failed to save tasks.")
