@@ -6,22 +6,6 @@ from view import TaskView
 from tkinter import messagebox
 
 class TaskController:
-
-    def modify_owner(self) -> None:
-        """
-        Modify the owner of the selected task to the currently selected owner in the dropdown.
-        """
-        index = self.view.get_selected_index()
-        if index is not None:
-            tasks = self.model.get_tasks()
-            if 0 <= index < len(tasks):
-                task_text, _ = tasks[index] if isinstance(tasks[index], tuple) and len(tasks[index]) == 2 else (str(tasks[index]), "")
-                new_owner = self.view.owner_var.get()
-                self.model.tasks[index] = (task_text, new_owner)
-                self.view.update_tasks(self.model.get_tasks())
-        else:
-            from tkinter import messagebox
-            messagebox.showwarning("No selection", "Please select a task to change its owner.")
     """
     Controller for the To-Do List GUI application.
 
@@ -39,6 +23,21 @@ class TaskController:
         self.view = TaskView(root, self)
         self.view.update_tasks(self.model.get_tasks())
 
+    def modify_owner(self) -> None:
+        """
+        Modify the owner of the selected task to the currently selected owner in the dropdown.
+        """
+        index = self.view.get_selected_index()
+        if index is not None:
+            tasks = self.model.get_tasks()
+            if 0 <= index < len(tasks):
+                task_text, _ = tasks[index] if isinstance(tasks[index], tuple) and len(tasks[index]) == 2 else (str(tasks[index]), "")
+                new_owner = self.view.owner_var.get()
+                self.model.tasks[index] = (task_text, new_owner)
+                self.view.update_tasks(self.model.get_tasks())
+        else:
+            from tkinter import messagebox
+            messagebox.showwarning("No selection", "Please select a task to change its owner.")
     def add_task(self) -> None:
         """
         Add a new task from the view input to the model and update the view.
