@@ -87,21 +87,24 @@ class TaskView(tk.Frame):
         """
         self.task_entry.delete(0, tk.END)
 
-    def update_tasks(self, tasks):
+    def update_tasks(self, tasks, filter_owner=None):
         """
-        Update the listbox to show all current tasks.
+        Update the listbox to show all current tasks, optionally filtering by owner.
 
         Args:
             tasks (list): The list of tasks to display.
+            filter_owner (str, optional): If set, only show tasks for this owner.
         """
         self.tasks_listbox.delete(0, tk.END)
         for task in tasks:
-            # task is a tuple (task_text, owner)
             if isinstance(task, tuple) and len(task) == 2:
-                display = f"{task[0]} (Owner: {task[1]})"
+                if filter_owner is None or task[1] == filter_owner:
+                    display = f"{task[0]} (Owner: {task[1]})"
+                    self.tasks_listbox.insert(tk.END, display)
             else:
-                display = str(task)
-            self.tasks_listbox.insert(tk.END, display)
+                if filter_owner is None:
+                    self.tasks_listbox.insert(tk.END, str(task))
+
 
     def get_selected_index(self):
         """

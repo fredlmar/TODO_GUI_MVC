@@ -6,6 +6,23 @@ from view import TaskView
 from tkinter import messagebox
 
 class TaskController:
+
+    def toggle_owner_filter(self) -> None:
+        """
+        Toggle the filter for showing only tasks of the selected owner.
+        """
+        if self.view.filter_var.get():
+            owner = self.view.owner_var.get()
+            self.view.update_tasks(self.model.get_tasks(), filter_owner=owner)
+        else:
+            self.view.update_tasks(self.model.get_tasks())
+
+    def filter_tasks_by_owner(self) -> None:
+        """
+        Filter and show only tasks of the selected owner in the view.
+        """
+        owner = self.view.owner_var.get()
+        self.view.update_tasks(self.model.get_tasks(), filter_owner=owner)
     """
     Controller for the To-Do List GUI application.
 
