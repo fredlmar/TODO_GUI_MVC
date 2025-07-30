@@ -39,18 +39,28 @@ class TaskView(tk.Frame):
         self.add_button = tk.Button(self, text="Add Task", command=self.controller.add_task)
         self.add_button.pack()
 
+        self.filter_var = tk.BooleanVar(value=False)
+        self.filter_checkbox = tk.Checkbutton(self, text="Show Only Selected Owner's Tasks", variable=self.filter_var, command=self.controller.toggle_owner_filter)
+        self.filter_checkbox.pack(pady=2)
+
         self.tasks_listbox = tk.Listbox(self, width=50)
         self.tasks_listbox.pack(pady=5)
 
         self.delete_button = tk.Button(self, text="Delete Selected Task", command=self.controller.delete_task)
         self.delete_button.pack()
 
-
         self.save_button = tk.Button(self, text="Save Tasks", command=self.controller.save_tasks)
         self.save_button.pack()
 
         self.modify_owner_button = tk.Button(self, text="Change Owner of Selected Task", command=self.controller.modify_owner)
         self.modify_owner_button.pack(pady=2)
+
+        # Trace owner_var to update list if filtering is enabled (after all widgets are created)
+        self.owner_var.trace_add('write', lambda *args: self._on_owner_change())
+
+    def _on_owner_change(self):
+        if hasattr(self, 'filter_var') and self.filter_var.get():
+            self.controller.toggle_owner_filter()
 
 
     def set_owner_dropdown(self, owner):
