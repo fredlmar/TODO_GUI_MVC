@@ -25,6 +25,15 @@ class TaskView(tk.Frame):
         self.task_entry = tk.Entry(self, width=40)
         self.task_entry.pack(pady=5)
 
+        # Owner selection dropdown
+        self.owner_label = tk.Label(self, text="Owner:")
+        self.owner_label.pack()
+        self.owner_var = tk.StringVar()
+        self.owner_var.set("Alice")  # Default owner
+        self.owner_options = ["Alice", "Bob", "Charlie"]
+        self.owner_menu = tk.OptionMenu(self, self.owner_var, *self.owner_options)
+        self.owner_menu.pack(pady=2)
+
         self.add_button = tk.Button(self, text="Add Task", command=self.controller.add_task)
         self.add_button.pack()
 
@@ -34,17 +43,31 @@ class TaskView(tk.Frame):
         self.delete_button = tk.Button(self, text="Delete Selected Task", command=self.controller.delete_task)
         self.delete_button.pack()
 
+
         self.save_button = tk.Button(self, text="Save Tasks", command=self.controller.save_tasks)
         self.save_button.pack()
+
+        self.modify_owner_button = tk.Button(self, text="Change Owner of Selected Task", command=self.controller.modify_owner)
+        self.modify_owner_button.pack(pady=2)
+
+
+    def set_owner_dropdown(self, owner):
+        """
+        Set the owner dropdown to the given owner.
+        """
+        if owner in self.owner_options:
+            self.owner_var.set(owner)
+        else:
+            self.owner_var.set(self.owner_options[0])
 
     def get_input(self):
         """
         Get the current text from the input field.
 
         Returns:
-            str: The entered task text.
+            tuple: (task text, owner)
         """
-        return self.task_entry.get()
+        return (self.task_entry.get(), self.owner_var.get())
 
     def clear_input(self):
         """
@@ -61,7 +84,12 @@ class TaskView(tk.Frame):
         """
         self.tasks_listbox.delete(0, tk.END)
         for task in tasks:
-            self.tasks_listbox.insert(tk.END, task)
+            # task is a tuple (task_text, owner)
+            if isinstance(task, tuple) and len(task) == 2:
+                display = f"{task[0]} (Owner: {task[1]})"
+            else:
+                display = str(task)
+            self.tasks_listbox.insert(tk.END, display)
 
     def get_selected_index(self):
         """
