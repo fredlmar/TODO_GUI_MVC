@@ -17,9 +17,9 @@ class TaskModel:
         Add a new task to the list.
 
         Args:
-            task (str): The task to add.
+            task (tuple): The task to add, as (task_text, owner).
         """
-        if task:
+        if task and isinstance(task, tuple) and len(task) == 2:
             self.tasks.append(task)
 
     def get_tasks(self):
@@ -59,7 +59,10 @@ class TaskModel:
         try:
             with open(filename, "w", encoding="utf-8") as f:
                 for task in self.tasks:
-                    f.write(task + "\n")
+                    if isinstance(task, tuple) and len(task) == 2:
+                        f.write(f"{task[0]}|{task[1]}\n")
+                    else:
+                        f.write(str(task) + "\n")
             return True
         except Exception:
             return False
@@ -73,7 +76,15 @@ class TaskModel:
         """
         try:
             with open(filename, "r", encoding="utf-8") as f:
-                self.tasks = [line.strip() for line in f if line.strip()]
+                self.tasks = []
+                for line in f:
+                    line = line.strip()
+                    if line:
+                        if '|' in line:
+                            parts = line.split('|', 1)
+                            self.tasks.append((parts[0], parts[1]))
+                        else:
+                            self.tasks.append(line)
         except FileNotFoundError:
             self.tasks = []
         except Exception:
