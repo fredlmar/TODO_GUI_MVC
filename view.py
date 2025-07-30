@@ -8,6 +8,7 @@ class TaskView(tk.Frame):
 
     Provides the graphical interface and user input elements.
     """
+    # Duplicate __init__ removed. Only one __init__ method should exist, and it should include all widgets, including the filter button.
     def __init__(self, master, controller):
         """
         Initialize the view and create all widgets.
@@ -24,6 +25,7 @@ class TaskView(tk.Frame):
 
         self.task_entry = tk.Entry(self, width=40)
         self.task_entry.pack(pady=5)
+
 
         # Owner selection dropdown
         self.owner_label = tk.Label(self, text="Owner:")
