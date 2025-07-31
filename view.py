@@ -8,6 +8,7 @@ class TaskView(tk.Frame):
 
     Provides the graphical interface and user input elements.
     """
+    # Duplicate __init__ removed. Only one __init__ method should exist, and it should include all widgets, including the filter button.
     def __init__(self, master, controller):
         """
         Initialize the view and create all widgets.
@@ -25,6 +26,7 @@ class TaskView(tk.Frame):
         self.task_entry = tk.Entry(self, width=40)
         self.task_entry.pack(pady=5)
 
+
         # Owner selection dropdown
         self.owner_label = tk.Label(self, text="Owner:")
         self.owner_label.pack()
@@ -37,18 +39,28 @@ class TaskView(tk.Frame):
         self.add_button = tk.Button(self, text="Add Task", command=self.controller.add_task)
         self.add_button.pack()
 
+        self.filter_var = tk.BooleanVar(value=False)
+        self.filter_checkbox = tk.Checkbutton(self, text="Show Only Selected Owner's Tasks", variable=self.filter_var, command=self.controller.toggle_owner_filter)
+        self.filter_checkbox.pack(pady=2)
+
         self.tasks_listbox = tk.Listbox(self, width=50)
         self.tasks_listbox.pack(pady=5)
 
         self.delete_button = tk.Button(self, text="Delete Selected Task", command=self.controller.delete_task)
         self.delete_button.pack()
 
-
         self.save_button = tk.Button(self, text="Save Tasks", command=self.controller.save_tasks)
         self.save_button.pack()
 
         self.modify_owner_button = tk.Button(self, text="Change Owner of Selected Task", command=self.controller.modify_owner)
         self.modify_owner_button.pack(pady=2)
+
+        # Trace owner_var to update list if filtering is enabled (after all widgets are created)
+        self.owner_var.trace_add('write', lambda *args: self._on_owner_change())
+
+    def _on_owner_change(self):
+        if hasattr(self, 'filter_var') and self.filter_var.get():
+            self.controller.toggle_owner_filter()
 
 
     def set_owner_dropdown(self, owner):
@@ -75,21 +87,24 @@ class TaskView(tk.Frame):
         """
         self.task_entry.delete(0, tk.END)
 
-    def update_tasks(self, tasks):
+    def update_tasks(self, tasks, filter_owner=None):
         """
-        Update the listbox to show all current tasks.
+        Update the listbox to show all current tasks, optionally filtering by owner.
 
         Args:
             tasks (list): The list of tasks to display.
+            filter_owner (str, optional): If set, only show tasks for this owner.
         """
         self.tasks_listbox.delete(0, tk.END)
         for task in tasks:
-            # task is a tuple (task_text, owner)
             if isinstance(task, tuple) and len(task) == 2:
-                display = f"{task[0]} (Owner: {task[1]})"
+                if filter_owner is None or task[1] == filter_owner:
+                    display = f"{task[0]} (Owner: {task[1]})"
+                    self.tasks_listbox.insert(tk.END, display)
             else:
-                display = str(task)
-            self.tasks_listbox.insert(tk.END, display)
+                if filter_owner is None:
+                    self.tasks_listbox.insert(tk.END, str(task))
+
 
     def get_selected_index(self):
         """
