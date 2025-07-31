@@ -17,10 +17,13 @@ class TaskModel:
         Add a new task to the list.
 
         Args:
-            task (tuple): The task to add, as (task_text, owner).
+            task (tuple): The task to add, as (task_text, owner) or (task_text, owner, done).
         """
-        if task and isinstance(task, tuple) and len(task) == 2:
-            self.tasks.append(task)
+        if task and isinstance(task, tuple):
+            if len(task) == 2:
+                self.tasks.append((task[0], task[1], False))
+            elif len(task) == 3:
+                self.tasks.append(task)
 
     def get_tasks(self):
         """
@@ -59,8 +62,13 @@ class TaskModel:
         try:
             with open(filename, "w", encoding="utf-8") as f:
                 for task in self.tasks:
-                    if isinstance(task, tuple) and len(task) == 2:
-                        f.write(f"{task[0]}|{task[1]}\n")
+                    if isinstance(task, tuple):
+                        if len(task) == 3:
+                            f.write(f"{task[0]}|{task[1]}|{int(task[2])}\n")
+                        elif len(task) == 2:
+                            f.write(f"{task[0]}|{task[1]}|0\n")
+                        else:
+                            f.write(str(task) + "\n")
                     else:
                         f.write(str(task) + "\n")
             return True
@@ -80,9 +88,12 @@ class TaskModel:
                 for line in f:
                     line = line.strip()
                     if line:
-                        if '|' in line:
-                            parts = line.split('|', 1)
-                            self.tasks.append((parts[0], parts[1]))
+                        parts = line.split('|')
+                        if len(parts) == 3:
+                            text, owner, done = parts
+                            self.tasks.append((text, owner, bool(int(done))))
+                        elif len(parts) == 2:
+                            self.tasks.append((parts[0], parts[1], False))
                         else:
                             self.tasks.append(line)
         except FileNotFoundError:

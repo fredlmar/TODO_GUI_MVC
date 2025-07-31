@@ -7,6 +7,30 @@ from tkinter import messagebox
 
 class TaskController:
 
+    def set_task_done(self) -> None:
+        """
+        Toggle the 'done' status of the selected task.
+        """
+        index = self.view.get_selected_index()
+        if index is not None:
+            tasks = self.model.get_tasks()
+            if 0 <= index < len(tasks):
+                task = tasks[index]
+                if isinstance(task, tuple):
+                    if len(task) == 3:
+                        task_text, owner, done = task
+                    elif len(task) == 2:
+                        task_text, owner = task
+                        done = False
+                    else:
+                        return
+                    # Toggle the done status
+                    self.model.tasks[index] = (task_text, owner, not done)
+                    self.view.update_tasks(self.model.get_tasks(), selected_index=index)
+        else:
+            from tkinter import messagebox
+            messagebox.showwarning("No selection", "Please select a task to toggle its done status.")
+
     def toggle_owner_filter(self) -> None:
         """
         Toggle the filter for showing only tasks of the selected owner.
@@ -48,10 +72,19 @@ class TaskController:
         if index is not None:
             tasks = self.model.get_tasks()
             if 0 <= index < len(tasks):
-                task_text, _ = tasks[index] if isinstance(tasks[index], tuple) and len(tasks[index]) == 2 else (str(tasks[index]), "")
+                task = tasks[index]
+                if isinstance(task, tuple):
+                    task_text = task[0]
+                else:
+                    task_text = str(task)
                 new_owner = self.view.owner_var.get()
-                self.model.tasks[index] = (task_text, new_owner)
-                self.view.update_tasks(self.model.get_tasks())
+                # Preserve done status if present
+                if isinstance(task, tuple) and len(task) == 3:
+                    _, _, done = task
+                    self.model.tasks[index] = (task_text, new_owner, done)
+                else:
+                    self.model.tasks[index] = (task_text, new_owner)
+                self.view.update_tasks(self.model.get_tasks(), selected_index=index)
         else:
             from tkinter import messagebox
             messagebox.showwarning("No selection", "Please select a task to change its owner.")
@@ -73,7 +106,10 @@ class TaskController:
         index = self.view.get_selected_index()
         if index is not None:
             self.model.delete_task(index)
-            self.view.update_tasks(self.model.get_tasks())
+            # Try to keep selection at the same index, or previous if last was deleted
+            new_size = len(self.model.get_tasks())
+            new_index = min(index, new_size - 1) if new_size > 0 else None
+            self.view.update_tasks(self.model.get_tasks(), selected_index=new_index)
         else:
             messagebox.showwarning("No selection", "Please select a task to delete.")
 

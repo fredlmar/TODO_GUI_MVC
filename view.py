@@ -36,8 +36,12 @@ class TaskView(tk.Frame):
         self.owner_menu = tk.OptionMenu(self, self.owner_var, *self.owner_options)
         self.owner_menu.pack(pady=2)
 
+
         self.add_button = tk.Button(self, text="Add Task", command=self.controller.add_task)
         self.add_button.pack()
+
+        self.done_button = tk.Button(self, text="Set Selected Task to Done", command=self.controller.set_task_done)
+        self.done_button.pack(pady=2)
 
         self.filter_var = tk.BooleanVar(value=False)
         self.filter_checkbox = tk.Checkbutton(self, text="Show Only Selected Owner's Tasks", variable=self.filter_var, command=self.controller.toggle_owner_filter)
@@ -87,23 +91,40 @@ class TaskView(tk.Frame):
         """
         self.task_entry.delete(0, tk.END)
 
-    def update_tasks(self, tasks, filter_owner=None):
+    def update_tasks(self, tasks, filter_owner=None, selected_index=None):
         """
         Update the listbox to show all current tasks, optionally filtering by owner.
 
         Args:
             tasks (list): The list of tasks to display.
             filter_owner (str, optional): If set, only show tasks for this owner.
+            selected_index (int, optional): Index to re-select after update.
         """
         self.tasks_listbox.delete(0, tk.END)
         for task in tasks:
-            if isinstance(task, tuple) and len(task) == 2:
-                if filter_owner is None or task[1] == filter_owner:
-                    display = f"{task[0]} (Owner: {task[1]})"
+            # Support (task_text, owner, done) or (task_text, owner)
+            if isinstance(task, tuple):
+                if len(task) == 3:
+                    task_text, owner, done = task
+                elif len(task) == 2:
+                    task_text, owner = task
+                    done = False
+                else:
+                    continue
+                if filter_owner is None or owner == filter_owner:
+                    status = "[DONE] " if done else ""
+                    display = f"{status}{task_text} (Owner: {owner})"
                     self.tasks_listbox.insert(tk.END, display)
             else:
                 if filter_owner is None:
                     self.tasks_listbox.insert(tk.END, str(task))
+
+        # Restore selection if possible
+        if selected_index is not None and self.tasks_listbox.size() > 0:
+            if 0 <= selected_index < self.tasks_listbox.size():
+                self.tasks_listbox.selection_set(selected_index)
+                self.tasks_listbox.activate(selected_index)
+                self.tasks_listbox.see(selected_index)
 
 
     def get_selected_index(self):
