@@ -32,7 +32,7 @@ class TaskView(tk.Frame):
         self.owner_label.pack()
         self.owner_var = tk.StringVar()
         self.owner_var.set("Alice")  # Default owner
-        self.owner_options = ["Alice", "Bob", "Charlie", "Manfredo", "David"]
+        self.owner_options = ["Alice", "Bob", "Charlie", "Manfredo", "David", "Eve"]
         self.owner_menu = tk.OptionMenu(self, self.owner_var, *self.owner_options)
         self.owner_menu.pack(pady=2)
 
