@@ -1,9 +1,11 @@
 # controller.py
 
+
 import tkinter as tk
 from model import TaskModel
 from view import TaskView
 from tkinter import messagebox
+import datetime
 
 class TaskController:
     def mark_dirty(self):
@@ -38,7 +40,7 @@ class TaskController:
 
     def set_task_done(self) -> None:
         """
-        Toggle the 'done' status of the selected task.
+        Toggle the 'done' status of the selected task. If setting to done, include the current date.
         """
         index = self.view.get_selected_index()
         if index is not None:
@@ -46,15 +48,26 @@ class TaskController:
             if 0 <= index < len(tasks):
                 task = tasks[index]
                 if isinstance(task, tuple):
-                    if len(task) == 3:
+                    # Support (task_text, owner, done) or (task_text, owner, done, date)
+                    if len(task) == 4:
+                        task_text, owner, done, date_done = task
+                    elif len(task) == 3:
                         task_text, owner, done = task
+                        date_done = None
                     elif len(task) == 2:
                         task_text, owner = task
                         done = False
+                        date_done = None
                     else:
                         return
                     # Toggle the done status
-                    self.model.tasks[index] = (task_text, owner, not done)
+                    if not done:
+                        # Set to done, add date
+                        date_str = datetime.date.today().isoformat()
+                        self.model.tasks[index] = (task_text, owner, True, date_str)
+                    else:
+                        # Set to not done, remove date
+                        self.model.tasks[index] = (task_text, owner, False, None)
                     self.view.update_tasks(self.model.get_tasks(), selected_index=index)
                     self.mark_dirty()
         else:
