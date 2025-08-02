@@ -121,7 +121,7 @@ class TaskController:
             return
         try:
             self.model.add_owner(new_owner)
-            self.view.add_owner()
+            self.view.owner_options = self.model.owners
             self.view.owner_var.set(new_owner)
             self.view.new_owner_entry.delete(0, tk.END)
             self.unsaved_changes = True

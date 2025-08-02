@@ -110,7 +110,7 @@ class TaskView(tk.Frame):
         new_owner = self.new_owner_entry.get().strip()
         if new_owner and new_owner not in self.owner_options:
             self.owner_options.append(new_owner)
-        self.update_owner_dropdown(selected_owner=new_owner)
+            self.update_owner_dropdown(selected_owner=new_owner)
 
 
     def _on_owner_change(self):
