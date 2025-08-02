@@ -4,8 +4,7 @@ import tkinter as tk
 
 class TaskView(tk.Frame):
     """
-    View for the To-Do List GUI application.
-
+    View for the TO-DO List GUI application.
     Provides the graphical interface and user input elements.
     """
     # Duplicate __init__ removed. Only one __init__ method should exist, and it should include all widgets, including the filter button.
