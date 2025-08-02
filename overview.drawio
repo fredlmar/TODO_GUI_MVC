@@ -1,0 +1,75 @@
+<mxfile host="65bd71144e">
+    <diagram id="r55eto8E_-sshTphHCUY" name="Page-1">
+        <mxGraphModel dx="1783" dy="534" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="4" value="" style="edgeStyle=none;html=1;rounded=0;endArrow=none;endFill=0;" parent="1" source="2" target="3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="&amp;" style="externalPins=0;recursiveResize=0;shadow=0;dashed=0;align=center;html=1;strokeWidth=1;shape=mxgraph.rtl.abstract.entity;verticalAlign=top;spacing=0;spacingTop=7;left=2;right=1;top=0;bottom=0;drawPins=1;snapToPoint=1;resizable=0;editable=0;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="130" y="70" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="&amp;" style="externalPins=0;recursiveResize=0;shadow=0;dashed=0;align=center;html=1;strokeWidth=1;shape=mxgraph.rtl.abstract.entity;verticalAlign=top;spacing=0;spacingTop=7;left=2;right=1;top=0;bottom=0;drawPins=1;snapToPoint=1;resizable=0;editable=0;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="260" y="80" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="≥1" style="externalPins=0;recursiveResize=0;shadow=0;dashed=0;align=center;html=1;strokeWidth=1;shape=mxgraph.rtl.abstract.entity;verticalAlign=top;spacing=0;spacingTop=7;left=2;right=1;top=0;bottom=0;drawPins=1;snapToPoint=1;resizable=0;editable=0;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="130" y="150" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0;exitDx=60;exitDy=30;exitPerimeter=0;entryX=0;entryY=0;entryDx=0;entryDy=40;entryPerimeter=0;rounded=0;curved=0;endArrow=none;endFill=0;" parent="1" source="5" target="3" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="220" y="180"/>
+                            <mxPoint x="220" y="120"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="15" value="≥1" style="externalPins=0;recursiveResize=0;shadow=0;dashed=0;align=center;html=1;strokeWidth=1;shape=mxgraph.rtl.abstract.entity;verticalAlign=top;spacing=0;spacingTop=7;left=2;right=1;top=0;bottom=0;drawPins=1;snapToPoint=1;resizable=0;editable=0;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="160" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" style="edgeStyle=elbowEdgeStyle;html=1;exitX=0;exitY=0;exitDx=60;exitDy=30;exitPerimeter=0;entryX=0;entryY=0;entryDx=0;entryDy=20;entryPerimeter=0;rounded=0;curved=0;endArrow=none;endFill=0;" parent="1" source="3" target="15" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="≥1" style="externalPins=0;recursiveResize=0;shadow=0;dashed=0;align=center;html=1;strokeWidth=1;shape=mxgraph.rtl.abstract.entity;verticalAlign=top;spacing=0;spacingTop=7;left=2;right=1;top=0;bottom=0;drawPins=1;snapToPoint=1;resizable=0;editable=0;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="240" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="{ &quot;signal&quot; : [&#xa;  { &quot;name&quot;: &quot;CK&quot;,  &quot;wave&quot;: &quot;P...|....&quot;,                                                 &quot;period&quot;:2   },&#xa;  { &quot;name&quot;: &quot;CMD&quot;, &quot;wave&quot;: &quot;x.6x=x4x=x=x=x=x&quot;, &quot;data&quot; : &quot;RAS RAS CAS NOP NOP NOP NOP&quot;, &quot;phase&quot; :0.5 },&#xa;  { &quot;name&quot;: &quot;ADDR&quot;,&quot;wave&quot;: &quot;x.=x..=x........&quot;, &quot;data&quot; : &quot;ROW COL&quot;,                     &quot;phase&quot; :0.5 },&#xa;  { &quot;name&quot;: &quot;DQS&quot;, &quot;wave&quot;: &quot;z.......0.1010z.&quot; },&#xa;  { &quot;name&quot;: &quot;DQ&quot;,  &quot;wave&quot;: &quot;z.........5555z.&quot;, &quot;data&quot; : &quot;D0 D1 D2 D3&quot; }&#xa;]}&#xa;" style="shadow=0;dashed=0;align=left;strokeWidth=1;labelBackgroundColor=#ffffff;noLabel=1;shape=mxgraph.wavedrom.abstract.timing;fontFamily=Helvetica;fontSize=11;fontColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="-50" y="500" width="800" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="{&#xa;    &quot;signal&quot;: [&#xa;        { &quot;name&quot;: &quot;Alfa&quot;, &quot;wave&quot;: &quot;01.zx=ud.23.456789&quot; }&#xa;    ]&#xa;}" style="shadow=0;dashed=0;align=left;strokeWidth=1;labelBackgroundColor=#ffffff;noLabel=1;shape=mxgraph.wavedrom.abstract.timing;fontFamily=Helvetica;fontSize=11;fontColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="70" y="410" width="800" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="{ &quot;reg&quot;: [&#xa;    { &quot;name&quot;: &quot;D&quot;, &quot;bits&quot;: 1, &quot;attr&quot;: &quot;&quot;, &quot;type&quot;:6 },&#xa;    { &quot;name&quot;: &quot;L&quot;, &quot;bits&quot;: 1, &quot;attr&quot;: &quot;&quot;, &quot;type&quot;:5 },&#xa;    { &quot;name&quot;: &quot;E&quot;, &quot;bits&quot;: 1, &quot;attr&quot;: &quot;&quot;, &quot;type&quot;:4 },&#xa;    { &quot;name&quot;: &quot;I&quot;, &quot;bits&quot;: 1, &quot;attr&quot;: &quot;&quot;, &quot;type&quot;:3 },&#xa;    { &quot;name&quot;: &quot;F&quot;, &quot;bits&quot;: 1, &quot;attr&quot;: &quot;&quot;, &quot;type&quot;:2 },&#xa;    { &quot;name&quot;: &quot;T&quot;, &quot;bits&quot;: 1, &quot;attr&quot;: &quot;&quot;, &quot;type&quot;:1 },&#xa;    { &quot;name&quot;: &quot;I&quot;, &quot;bits&quot;: 1, &quot;attr&quot;: &quot;&quot;, &quot;type&quot;:0 },&#xa;    { &quot;name&quot;: &quot;B&quot;, &quot;bits&quot;: 1, &quot;attr&quot;: &quot;&quot; }&#xa;]}" style="shadow=0;dashed=0;align=left;strokeWidth=1;labelBackgroundColor=#ffffff;noLabel=1;shape=mxgraph.wavedrom.abstract.bitfield;fontFamily=Helvetica;fontSize=11;fontColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="120" y="310" width="300" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" value="1" style="html=1;whiteSpace=wrap;fillColor=#10739E;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;rounded=0;fontFamily=Helvetica;labelBackgroundColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="550" y="90" width="40" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="&lt;div&gt;hallo&lt;/div&gt;" style="shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=10;notch=0;html=1;whiteSpace=wrap;fillColor=#64BBE2;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;fontFamily=Helvetica;labelBackgroundColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="595" y="90" width="95" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="2" style="html=1;whiteSpace=wrap;fillColor=#F2931E;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;rounded=0;fontFamily=Helvetica;labelBackgroundColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="550" y="135" width="40" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value="&lt;font&gt;HI&lt;/font&gt;" style="shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=10;notch=0;html=1;whiteSpace=wrap;fillColor=#F8C382;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;fontFamily=Helvetica;labelBackgroundColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="595" y="135" width="295" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="59" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.infographic.shadedCube;isoAngle=15;fillColor=#12AAB5;strokeColor=none;shadow=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="640" y="200" width="40" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.infographic.shadedCube;isoAngle=15;fillColor=#23445D;strokeColor=none;shadow=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="615" y="262" width="40" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.infographic.shadedCube;isoAngle=15;fillColor=#AE4132;strokeColor=none;shadow=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="590" y="234" width="40" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.infographic.shadedCube;isoAngle=15;fillColor=#F2931E;strokeColor=none;shadow=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="565" y="280" width="40" height="56" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.infographic.shadedCube;isoAngle=15;fillColor=#10739E;strokeColor=none;shadow=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="540" y="268" width="40" height="80" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
