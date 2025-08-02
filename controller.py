@@ -1,15 +1,46 @@
 # controller.py
 
+
 import tkinter as tk
 from model import TaskModel
 from view import TaskView
 from tkinter import messagebox
+import datetime
 
 class TaskController:
+    def mark_dirty(self):
+        """
+        Mark the application as having unsaved changes.
+        """
+        self._dirty = True
+
+    def mark_clean(self):
+        """
+        Mark the application as having no unsaved changes.
+        """
+        self._dirty = False
+
+    def is_dirty(self):
+        """
+        Return True if there are unsaved changes.
+        """
+        return getattr(self, '_dirty', False)
+
+    def on_closing(self):
+        """
+        Ask to save changes if there are unsaved changes before closing.
+        """
+        if self.is_dirty():
+            result = messagebox.askyesnocancel("Unsaved Changes", "You have unsaved changes. Save before exiting?")
+            if result is None:
+                return  # Cancel close
+            elif result:
+                self.save_tasks()
+        self.view.master.destroy()
 
     def set_task_done(self) -> None:
         """
-        Toggle the 'done' status of the selected task.
+        Toggle the 'done' status of the selected task. If setting to done, include the current date.
         """
         index = self.view.get_selected_index()
         if index is not None:
@@ -17,16 +48,28 @@ class TaskController:
             if 0 <= index < len(tasks):
                 task = tasks[index]
                 if isinstance(task, tuple):
-                    if len(task) == 3:
+                    # Support (task_text, owner, done) or (task_text, owner, done, date)
+                    if len(task) == 4:
+                        task_text, owner, done, date_done = task
+                    elif len(task) == 3:
                         task_text, owner, done = task
+                        date_done = None
                     elif len(task) == 2:
                         task_text, owner = task
                         done = False
+                        date_done = None
                     else:
                         return
                     # Toggle the done status
-                    self.model.tasks[index] = (task_text, owner, not done)
+                    if not done:
+                        # Set to done, add date
+                        date_str = datetime.date.today().isoformat()
+                        self.model.tasks[index] = (task_text, owner, True, date_str)
+                    else:
+                        # Set to not done, remove date
+                        self.model.tasks[index] = (task_text, owner, False, None)
                     self.view.update_tasks(self.model.get_tasks(), selected_index=index)
+                    self.mark_dirty()
         else:
             from tkinter import messagebox
             messagebox.showwarning("No selection", "Please select a task to toggle its done status.")
@@ -59,6 +102,7 @@ class TaskController:
         Args:
             root: The Tkinter root window.
         """
+        self._dirty = False
         self.model = TaskModel()
         self.model.load_tasks()
         self.view = TaskView(root, self)
@@ -85,6 +129,7 @@ class TaskController:
                 else:
                     self.model.tasks[index] = (task_text, new_owner)
                 self.view.update_tasks(self.model.get_tasks(), selected_index=index)
+                self.mark_dirty()
         else:
             from tkinter import messagebox
             messagebox.showwarning("No selection", "Please select a task to change its owner.")
@@ -97,6 +142,7 @@ class TaskController:
             self.model.add_task((task_text, owner))
             self.view.update_tasks(self.model.get_tasks())
             self.view.clear_input()
+            self.mark_dirty()
 
     def delete_task(self) -> None:
         """
@@ -110,6 +156,7 @@ class TaskController:
             new_size = len(self.model.get_tasks())
             new_index = min(index, new_size - 1) if new_size > 0 else None
             self.view.update_tasks(self.model.get_tasks(), selected_index=new_index)
+            self.mark_dirty()
         else:
             messagebox.showwarning("No selection", "Please select a task to delete.")
 
@@ -120,6 +167,8 @@ class TaskController:
         """
         success = self.model.save_tasks()
         if success:
-            messagebox.showinfo("Tasks Saved", "All tasks have been saved successfully.")
+            # TODO: #11 change text in messagebox
+            messagebox.showinfo("Tasks Saved!", "All tasks have been saved successfully.")
+            self.mark_clean()
         else:
             messagebox.showerror("Save Failed", "Failed to save tasks.")

@@ -21,43 +21,61 @@ class TaskView(tk.Frame):
         self.controller = controller
         self.master = master
         self.master.title("To-Do List GUI")
-        self.pack()
+        # Set window width based on the task listbox width (50 chars) and font size
+        listbox_width_chars = 50
+        # Estimate: 1 char ~6 px, plus border and scrollbar (right-aligned)
+        window_width = int(listbox_width_chars * 6 + 20)  # 8px per char, 28px border
+        window_height = 400
+        self.master.geometry(f"{window_width}x{window_height}")
+        # Add minimal left/right border, anchor all to west (left)
+        self.pack(padx=(8,8), pady=20, anchor="w")
 
-        self.task_entry = tk.Entry(self, width=40)
-        self.task_entry.pack(pady=5)
+        # Task input row (entry and add button in one line), aligned with task listbox
+        task_row = tk.Frame(self)
+        task_row.pack(pady=5, anchor="w")
+        self.task_entry = tk.Entry(task_row, width=40)
+        self.task_entry.pack(side=tk.LEFT, anchor="w")
+        self.add_button = tk.Button(task_row, text="Add Task", command=self.controller.add_task)
+        self.add_button.pack(side=tk.LEFT, padx=2, anchor="w")
 
 
-        # Owner selection dropdown
-        self.owner_label = tk.Label(self, text="Owner:")
-        self.owner_label.pack()
+        # Owner selection row (label, dropdown, and change button in one line)
+        owner_row = tk.Frame(self)
+        owner_row.pack(pady=2, anchor="w")
+        self.owner_label = tk.Label(owner_row, text="Owner:")
+        self.owner_label.pack(side=tk.LEFT)
         self.owner_var = tk.StringVar()
         self.owner_var.set("Alice")  # Default owner
-        self.owner_options = ["Alice", "Bob", "Charlie", "Manfredo", "David", "Eve"]
-        self.owner_menu = tk.OptionMenu(self, self.owner_var, *self.owner_options)
-        self.owner_menu.pack(pady=2)
+        self.owner_options = ["Alice", "Bob", "Charlie", "Manfredo", "David"]
+        self.owner_menu = tk.OptionMenu(owner_row, self.owner_var, *self.owner_options)
+        self.owner_menu.pack(side=tk.LEFT, padx=2)
+        self.modify_owner_button = tk.Button(owner_row, text="Change Task Owner", command=self.controller.modify_owner)
+        self.modify_owner_button.pack(side=tk.LEFT, padx=2)
 
 
-        self.add_button = tk.Button(self, text="Add Task", command=self.controller.add_task)
-        self.add_button.pack()
 
-        self.done_button = tk.Button(self, text="Set Selected Task to Done", command=self.controller.set_task_done)
-        self.done_button.pack(pady=2)
+
 
         self.filter_var = tk.BooleanVar(value=False)
-        self.filter_checkbox = tk.Checkbutton(self, text="Show Only Selected Owner's Tasks", variable=self.filter_var, command=self.controller.toggle_owner_filter)
-        self.filter_checkbox.pack(pady=2)
+        self.filter_checkbox = tk.Checkbutton(self, text="Filter by Selected Owner", variable=self.filter_var, command=self.controller.toggle_owner_filter)
+        self.filter_checkbox.pack(pady=2, anchor="w")
+
 
         self.tasks_listbox = tk.Listbox(self, width=50)
-        self.tasks_listbox.pack(pady=5)
+        self.tasks_listbox.pack(pady=5, anchor="w")
 
-        self.delete_button = tk.Button(self, text="Delete Selected Task", command=self.controller.delete_task)
-        self.delete_button.pack()
+        # Row for done and delete buttons
+        action_row = tk.Frame(self)
+        action_row.pack(pady=2, fill="x")
+        self.done_button = tk.Button(action_row, text="Set Task to Done", command=self.controller.set_task_done)
+        self.done_button.pack(side=tk.LEFT, padx=2)
+        self.delete_button = tk.Button(action_row, text="Delete Task", command=self.controller.delete_task)
+        self.delete_button.pack(side=tk.RIGHT, padx=2, anchor="e")
 
-        self.save_button = tk.Button(self, text="Save Tasks", command=self.controller.save_tasks)
-        self.save_button.pack()
 
-        self.modify_owner_button = tk.Button(self, text="Change Owner of Selected Task", command=self.controller.modify_owner)
-        self.modify_owner_button.pack(pady=2)
+        self.save_button = tk.Button(self, text="Save", command=self.controller.save_tasks)
+        self.save_button.pack(anchor="e", pady=5, fill="x")
+
 
         # Trace owner_var to update list if filtering is enabled (after all widgets are created)
         self.owner_var.trace_add('write', lambda *args: self._on_owner_change())
@@ -102,18 +120,23 @@ class TaskView(tk.Frame):
         """
         self.tasks_listbox.delete(0, tk.END)
         for task in tasks:
-            # Support (task_text, owner, done) or (task_text, owner)
+            # Support (task_text, owner, done, date_done), (task_text, owner, done), or (task_text, owner)
             if isinstance(task, tuple):
-                if len(task) == 3:
+                if len(task) == 4:
+                    task_text, owner, done, date_done = task
+                elif len(task) == 3:
                     task_text, owner, done = task
+                    date_done = None
                 elif len(task) == 2:
                     task_text, owner = task
                     done = False
+                    date_done = None
                 else:
                     continue
                 if filter_owner is None or owner == filter_owner:
                     status = "[DONE] " if done else ""
-                    display = f"{status}{task_text} (Owner: {owner})"
+                    date_str = f" (Done: {date_done})" if done and date_done else ""
+                    display = f"{status}{task_text} (Owner: {owner}){date_str}"
                     self.tasks_listbox.insert(tk.END, display)
             else:
                 if filter_owner is None:
