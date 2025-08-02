@@ -46,7 +46,7 @@ class TaskView(tk.Frame):
         self.owner_label.pack(side=tk.LEFT)
         self.owner_var = tk.StringVar()
         self.owner_var.set("Alice")  # Default owner
-        self.owner_options = ["Alice", "Bob", "Charlie", "Manfredo", "David", "Eve"]
+        self.owner_options = ["Alice", "Bob", "Charlie", "Manfredo", "David"]
         self.owner_menu = tk.OptionMenu(owner_row, self.owner_var, *self.owner_options)
         self.owner_menu.pack(side=tk.LEFT, padx=2)
         self.modify_owner_button = tk.Button(owner_row, text="Change Owner of Selected Task", command=self.controller.modify_owner)
