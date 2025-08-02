@@ -42,7 +42,6 @@ class TaskController:
         """
         Toggle the 'done' status of the selected task. If setting to done, include the current date.
         """
-        import datetime
         index = self.view.get_selected_index()
         if index is not None:
             tasks = self.model.get_tasks()
