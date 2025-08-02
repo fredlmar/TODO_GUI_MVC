@@ -6,6 +6,35 @@ from view import TaskView
 from tkinter import messagebox
 
 class TaskController:
+    def mark_dirty(self):
+        """
+        Mark the application as having unsaved changes.
+        """
+        self._dirty = True
+
+    def mark_clean(self):
+        """
+        Mark the application as having no unsaved changes.
+        """
+        self._dirty = False
+
+    def is_dirty(self):
+        """
+        Return True if there are unsaved changes.
+        """
+        return getattr(self, '_dirty', False)
+
+    def on_closing(self):
+        """
+        Ask to save changes if there are unsaved changes before closing.
+        """
+        if self.is_dirty():
+            result = messagebox.askyesnocancel("Unsaved Changes", "You have unsaved changes. Save before exiting?")
+            if result is None:
+                return  # Cancel close
+            elif result:
+                self.save_tasks()
+        self.view.master.destroy()
 
     def set_task_done(self) -> None:
         """
@@ -27,6 +56,7 @@ class TaskController:
                     # Toggle the done status
                     self.model.tasks[index] = (task_text, owner, not done)
                     self.view.update_tasks(self.model.get_tasks(), selected_index=index)
+                    self.mark_dirty()
         else:
             from tkinter import messagebox
             messagebox.showwarning("No selection", "Please select a task to toggle its done status.")
@@ -59,6 +89,7 @@ class TaskController:
         Args:
             root: The Tkinter root window.
         """
+        self._dirty = False
         self.model = TaskModel()
         self.model.load_tasks()
         self.view = TaskView(root, self)
@@ -85,6 +116,7 @@ class TaskController:
                 else:
                     self.model.tasks[index] = (task_text, new_owner)
                 self.view.update_tasks(self.model.get_tasks(), selected_index=index)
+                self.mark_dirty()
         else:
             from tkinter import messagebox
             messagebox.showwarning("No selection", "Please select a task to change its owner.")
@@ -97,6 +129,7 @@ class TaskController:
             self.model.add_task((task_text, owner))
             self.view.update_tasks(self.model.get_tasks())
             self.view.clear_input()
+            self.mark_dirty()
 
     def delete_task(self) -> None:
         """
@@ -110,6 +143,7 @@ class TaskController:
             new_size = len(self.model.get_tasks())
             new_index = min(index, new_size - 1) if new_size > 0 else None
             self.view.update_tasks(self.model.get_tasks(), selected_index=new_index)
+            self.mark_dirty()
         else:
             messagebox.showwarning("No selection", "Please select a task to delete.")
 
@@ -121,5 +155,6 @@ class TaskController:
         success = self.model.save_tasks()
         if success:
             messagebox.showinfo("Tasks Saved", "All tasks have been saved successfully.")
+            self.mark_clean()
         else:
             messagebox.showerror("Save Failed", "Failed to save tasks.")
