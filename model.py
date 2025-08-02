@@ -1,4 +1,5 @@
 # model.py
+import os
 
 class TaskModel:
     """
@@ -6,11 +7,14 @@ class TaskModel:
 
     Stores tasks in memory and provides methods to add, delete, save, and load tasks.
     """
-    def __init__(self):
+    def __init__(self, filename="tasks.txt"):
         """
         Initialize the TaskModel with an empty task list.
         """
+        self.filename = filename
         self.tasks = []
+        self.owners = []
+        self.load_tasks()
 
     def add_task(self, task):
         """
@@ -21,9 +25,11 @@ class TaskModel:
         """
         if task and isinstance(task, tuple):
             if len(task) == 2:
-                self.tasks.append((task[0], task[1], False, None))
+                task_text, owner = task
+                self.tasks.append((task_text, owner, False, None))
             elif len(task) == 3:
-                self.tasks.append((task[0], task[1], task[2], None))
+                task_text, owner, done = task
+                self.tasks.append((task_text, owner, done, None))
             elif len(task) == 4:
                 self.tasks.append(task)
 
@@ -51,62 +57,52 @@ class TaskModel:
             return True
         return False
 
-    def save_tasks(self, filename="tasks.txt"):
+    def save_tasks(self):
         """
         Save all tasks to a text file.
-
-        Args:
-            filename (str): The file to save tasks to.
-
-        Returns:
-            bool: True if saving was successful, False otherwise.
         """
-        try:
-            with open(filename, "w", encoding="utf-8") as f:
-                for task in self.tasks:
-                    if isinstance(task, tuple):
-                        # (task_text, owner, done, date_done)
-                        if len(task) == 4:
-                            date_done = task[3] if task[3] else ""
-                            f.write(f"{task[0]}|{task[1]}|{int(task[2])}|{date_done}\n")
-                        elif len(task) == 3:
-                            f.write(f"{task[0]}|{task[1]}|{int(task[2])}|\n")
-                        elif len(task) == 2:
-                            f.write(f"{task[0]}|{task[1]}|0|\n")
-                        else:
-                            f.write(str(task) + "\n")
-                    else:
-                        f.write(str(task) + "\n")
-            return True
-        except Exception:
-            return False
+        with open(self.filename, "w", encoding="utf-8") as f:
+            f.write("OWNERS:" + ",".join(self.owners) + "\n")
+            for task in self.tasks:
+                task_text, owner, done, date_done = task
+                date_done_str = date_done if date_done else ""
+                f.write(f"{task_text}|{owner}|{done}|{date_done_str}\n")
 
-    def load_tasks(self, filename="tasks.txt"):
+    def load_tasks(self):
         """
         Load tasks from a text file.
+        """
+        self.tasks = []
+        self.owners = []
+        if not os.path.exists(self.filename):
+            self.owners = ["No Owner"]
+            return
+        with open(self.filename, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+        if lines and lines[0].startswith("OWNERS:"):
+            self.owners = [o for o in lines[0].strip().replace("OWNERS:", "").split(",") if o]
+            if not self.owners:
+                self.owners = ["No Owner"]
+            task_lines = lines[1:]
+        else:
+            self.owners = ["No Owner"]
+            task_lines = lines
+        for line in task_lines:
+            parts = line.strip().split("|")
+            if len(parts) >= 3:
+                task_text = parts[0]
+                owner = parts[1]
+                done = parts[2] in ("True", "1")
+                date_done = parts[3] if len(parts) > 3 and parts[3] else None
+                self.tasks.append((task_text, owner, done, date_done))
+
+    def add_owner(self, owner):
+        """
+        Add a new owner to the list of owners.
 
         Args:
-            filename (str): The file to load tasks from.
+            owner (str): The owner to add.
         """
-        try:
-            with open(filename, "r", encoding="utf-8") as f:
-                self.tasks = []
-                for line in f:
-                    line = line.strip()
-                    if line:
-                        parts = line.split('|')
-                        if len(parts) == 4:
-                            text, owner, done, date_done = parts
-                            date_done = date_done if date_done else None
-                            self.tasks.append((text, owner, bool(int(done)), date_done))
-                        elif len(parts) == 3:
-                            text, owner, done = parts
-                            self.tasks.append((text, owner, bool(int(done)), None))
-                        elif len(parts) == 2:
-                            self.tasks.append((parts[0], parts[1], False, None))
-                        else:
-                            self.tasks.append(line)
-        except FileNotFoundError:
-            self.tasks = []
-        except Exception:
-            self.tasks = []
+        if owner and owner not in self.owners:
+            self.owners.append(owner)
+            self.save_tasks()
