@@ -75,7 +75,7 @@ class TaskController:
                 date_done = datetime.now().strftime("%Y-%m-%d %H:%M")
                 tasks[index] = (task_text, owner, True, date_done)
             self.view.update_tasks(tasks, selected_index=index)
-            self.unsaved_changes
+            self.unsaved_changes = True
 
     def toggle_owner_filter(self) -> None:
         """
@@ -137,7 +137,7 @@ class TaskController:
         self.model.add_owner(new_owner)
         self.view.owner_options = self.model.owners.copy()
         menu = self.view.owner_menu['menu']
-        menu.add_command(label=new_owner, command=tk._setit(self.view.owner_var, new_owner))
+        self.view.add_owner_to_dropdown(new_owner)
         self.view.owner_var.set(new_owner)
         self.view.new_owner_entry.delete(0, tk.END)
         self.unsaved_changes = True

@@ -92,7 +92,7 @@ class TaskModel:
             if len(parts) >= 3:
                 task_text = parts[0]
                 owner = parts[1]
-                done = parts[2] == "True"
+                done = parts[2] in ("True", "1")
                 date_done = parts[3] if len(parts) > 3 and parts[3] else None
                 self.tasks.append((task_text, owner, done, date_done))
 

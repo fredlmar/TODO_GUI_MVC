@@ -100,7 +100,7 @@ class TaskView(tk.Frame):
             menu = self.owner_menu['menu']
             menu.add_command(label=new_owner, command=tk._setit(self.owner_var, new_owner))
             self.owner_var.set(new_owner)
-        self.new_owner_entry.delete(0, tk.END)
+
 
     def _on_owner_change(self):
         if hasattr(self, 'filter_var') and self.filter_var.get():
