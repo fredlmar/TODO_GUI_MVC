@@ -24,7 +24,7 @@ class TaskView(tk.Frame):
         # Set window width based on the task listbox width (50 chars) and font size
         listbox_width_chars = 50
         # Estimate: 1 char ~6 px, plus border and scrollbar (right-aligned)
-        window_width = int(listbox_width_chars * 6 + 20)  # 8px per char, 28px border
+        window_width = int(listbox_width_chars * 6 + 20)  # 6px per char, 20px border
         window_height = 400
         self.master.geometry(f"{window_width}x{window_height}")
         # Add minimal left/right border, anchor all to west (left)
