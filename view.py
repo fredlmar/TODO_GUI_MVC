@@ -73,7 +73,7 @@ class TaskView(tk.Frame):
         self.delete_button.pack(side=tk.RIGHT, padx=2, anchor="e")
 
 
-        self.save_button = tk.Button(self, text="Save Tasks", command=self.controller.save_tasks)
+        self.save_button = tk.Button(self, text="Save", command=self.controller.save_tasks)
         self.save_button.pack(anchor="e", pady=5, fill="x")
 
 
