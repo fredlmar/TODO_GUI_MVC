@@ -57,7 +57,7 @@ class TaskView(tk.Frame):
 
 
         self.filter_var = tk.BooleanVar(value=False)
-        self.filter_checkbox = tk.Checkbutton(self, text="Filter Owner's Tasks", variable=self.filter_var, command=self.controller.toggle_owner_filter)
+        self.filter_checkbox = tk.Checkbutton(self, text="Filter by Selected Owner", variable=self.filter_var, command=self.controller.toggle_owner_filter)
         self.filter_checkbox.pack(pady=2, anchor="w")
 
 
