@@ -3,6 +3,19 @@
 import tkinter as tk
 
 class TaskView(tk.Frame):
+    def update_owner_dropdown(self, selected_owner=None):
+        """
+        Refresh the owner OptionMenu with the current owner_options list.
+        Optionally set the selected owner.
+        """
+        menu = self.owner_menu['menu']
+        menu.delete(0, 'end')
+        for owner in self.owner_options:
+            menu.add_command(label=owner, command=tk._setit(self.owner_var, owner))
+        if selected_owner and selected_owner in self.owner_options:
+            self.owner_var.set(selected_owner)
+        elif self.owner_options:
+            self.owner_var.set(self.owner_options[0])
     """
     View for the TO-DO List GUI application.
     Provides the graphical interface and user input elements.
@@ -92,14 +105,12 @@ class TaskView(tk.Frame):
 
     def add_owner(self):
         """
-        Add a new owner to the dropdown if not already present.
+        Add a new owner to the dropdown and refresh the OptionMenu.
         """
         new_owner = self.new_owner_entry.get().strip()
         if new_owner and new_owner not in self.owner_options:
             self.owner_options.append(new_owner)
-            menu = self.owner_menu['menu']
-            menu.add_command(label=new_owner, command=tk._setit(self.owner_var, new_owner))
-            self.owner_var.set(new_owner)
+        self.update_owner_dropdown(selected_owner=new_owner)
 
 
     def _on_owner_change(self):
@@ -110,10 +121,7 @@ class TaskView(tk.Frame):
         """
         Set the owner dropdown to the given owner.
         """
-        if owner in self.owner_options:
-            self.owner_var.set(owner)
-        elif self.owner_options:
-            self.owner_var.set(self.owner_options[0])
+        self.update_owner_dropdown(selected_owner=owner)
 
     def get_input(self):
         """
