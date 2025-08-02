@@ -120,18 +120,23 @@ class TaskView(tk.Frame):
         """
         self.tasks_listbox.delete(0, tk.END)
         for task in tasks:
-            # Support (task_text, owner, done) or (task_text, owner)
+            # Support (task_text, owner, done, date_done), (task_text, owner, done), or (task_text, owner)
             if isinstance(task, tuple):
-                if len(task) == 3:
+                if len(task) == 4:
+                    task_text, owner, done, date_done = task
+                elif len(task) == 3:
                     task_text, owner, done = task
+                    date_done = None
                 elif len(task) == 2:
                     task_text, owner = task
                     done = False
+                    date_done = None
                 else:
                     continue
                 if filter_owner is None or owner == filter_owner:
                     status = "[DONE] " if done else ""
-                    display = f"{status}{task_text} (Owner: {owner})"
+                    date_str = f" (Done: {date_done})" if done and date_done else ""
+                    display = f"{status}{task_text} (Owner: {owner}){date_str}"
                     self.tasks_listbox.insert(tk.END, display)
             else:
                 if filter_owner is None:

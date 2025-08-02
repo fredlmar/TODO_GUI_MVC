@@ -17,12 +17,14 @@ class TaskModel:
         Add a new task to the list.
 
         Args:
-            task (tuple): The task to add, as (task_text, owner) or (task_text, owner, done).
+            task (tuple): The task to add, as (task_text, owner), (task_text, owner, done), or (task_text, owner, done, date_done).
         """
         if task and isinstance(task, tuple):
             if len(task) == 2:
-                self.tasks.append((task[0], task[1], False))
+                self.tasks.append((task[0], task[1], False, None))
             elif len(task) == 3:
+                self.tasks.append((task[0], task[1], task[2], None))
+            elif len(task) == 4:
                 self.tasks.append(task)
 
     def get_tasks(self):
@@ -63,10 +65,14 @@ class TaskModel:
             with open(filename, "w", encoding="utf-8") as f:
                 for task in self.tasks:
                     if isinstance(task, tuple):
-                        if len(task) == 3:
-                            f.write(f"{task[0]}|{task[1]}|{int(task[2])}\n")
+                        # (task_text, owner, done, date_done)
+                        if len(task) == 4:
+                            date_done = task[3] if task[3] else ""
+                            f.write(f"{task[0]}|{task[1]}|{int(task[2])}|{date_done}\n")
+                        elif len(task) == 3:
+                            f.write(f"{task[0]}|{task[1]}|{int(task[2])}|\n")
                         elif len(task) == 2:
-                            f.write(f"{task[0]}|{task[1]}|0\n")
+                            f.write(f"{task[0]}|{task[1]}|0|\n")
                         else:
                             f.write(str(task) + "\n")
                     else:
@@ -89,11 +95,15 @@ class TaskModel:
                     line = line.strip()
                     if line:
                         parts = line.split('|')
-                        if len(parts) == 3:
+                        if len(parts) == 4:
+                            text, owner, done, date_done = parts
+                            date_done = date_done if date_done else None
+                            self.tasks.append((text, owner, bool(int(done)), date_done))
+                        elif len(parts) == 3:
                             text, owner, done = parts
-                            self.tasks.append((text, owner, bool(int(done))))
+                            self.tasks.append((text, owner, bool(int(done)), None))
                         elif len(parts) == 2:
-                            self.tasks.append((parts[0], parts[1], False))
+                            self.tasks.append((parts[0], parts[1], False, None))
                         else:
                             self.tasks.append(line)
         except FileNotFoundError:
