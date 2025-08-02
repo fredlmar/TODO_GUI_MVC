@@ -28,23 +28,6 @@ class TaskController:
         self.view.update_tasks(self.model.get_tasks())
         self.unsaved_changes = False
 
-    def mark_dirty(self):
-        """
-        Mark the application as having unsaved changes.
-        """
-        self.unsaved_changes = True
-
-    def mark_clean(self):
-        """
-        Mark the application as having no unsaved changes.
-        """
-        self.unsaved_changes = False
-
-    def is_dirty(self):
-        """
-        Return True if there are unsaved changes.
-        """
-        return getattr(self, '_dirty', False)
 
     def on_closing(self):
         """
@@ -71,7 +54,6 @@ class TaskController:
                 tasks[index] = (task_text, owner, False, None)
             else:
                 # Mark as done
-                from datetime import datetime
                 date_done = datetime.now().strftime("%Y-%m-%d %H:%M")
                 tasks[index] = (task_text, owner, True, date_done)
             self.view.update_tasks(tasks, selected_index=index)
@@ -122,9 +104,12 @@ class TaskController:
         Save all tasks to a file using the model.
         Shows a message box on success or error.
         """
-        self.model.save_tasks()
-        self.unsaved_changes = False
-        messagebox.showinfo("Saved", "Tasks and owners saved successfully.")
+        try:
+            self.model.save_tasks()
+            self.unsaved_changes = False
+            messagebox.showinfo("Saved", "Tasks and owners saved successfully.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to save tasks: {e}")
 
     def add_owner(self):
         new_owner = self.view.new_owner_entry.get().strip()
@@ -134,13 +119,14 @@ class TaskController:
         if new_owner in self.model.owners:
             messagebox.showinfo("Info", "Owner already exists.")
             return
-        self.model.add_owner(new_owner)
-        self.view.owner_options = self.model.owners.copy()
-        menu = self.view.owner_menu['menu']
-        self.view.add_owner_to_dropdown(new_owner)
-        self.view.owner_var.set(new_owner)
-        self.view.new_owner_entry.delete(0, tk.END)
-        self.unsaved_changes = True
+        try:
+            self.model.add_owner(new_owner)
+            self.view.owner_options = self.model.owners
+            self.view.owner_var.set(new_owner)
+            self.view.new_owner_entry.delete(0, tk.END)
+            self.unsaved_changes = True
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to add owner: {e}")
 
     def modify_owner(self) -> None:
         """
