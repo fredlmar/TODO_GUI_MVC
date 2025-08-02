@@ -89,6 +89,7 @@ class TaskController:
         Args:
             root: The Tkinter root window.
         """
+        self._dirty = False
         self.model = TaskModel()
         self.model.load_tasks()
         self.view = TaskView(root, self)
