@@ -152,7 +152,7 @@ class TaskController:
         index = self.view.get_selected_index()
         if index is not None:
             self.model.delete_task(index)
-            # Try to keep selection at the same index, or previous if last was deleted..
+            # Try to keep selection at the same index, or previous if last was deleted.
             new_size = len(self.model.get_tasks())
             new_index = min(index, new_size - 1) if new_size > 0 else None
             self.view.update_tasks(self.model.get_tasks(), selected_index=new_index)
