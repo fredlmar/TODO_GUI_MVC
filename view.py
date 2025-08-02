@@ -49,7 +49,7 @@ class TaskView(tk.Frame):
         self.owner_options = ["Alice", "Bob", "Charlie", "Manfredo", "David"]
         self.owner_menu = tk.OptionMenu(owner_row, self.owner_var, *self.owner_options)
         self.owner_menu.pack(side=tk.LEFT, padx=2)
-        self.modify_owner_button = tk.Button(owner_row, text="Change Owner of Selected Task", command=self.controller.modify_owner)
+        self.modify_owner_button = tk.Button(owner_row, text="Change Task Owner", command=self.controller.modify_owner)
         self.modify_owner_button.pack(side=tk.LEFT, padx=2)
 
 
@@ -57,7 +57,7 @@ class TaskView(tk.Frame):
 
 
         self.filter_var = tk.BooleanVar(value=False)
-        self.filter_checkbox = tk.Checkbutton(self, text="Show Only Selected Owner's Tasks", variable=self.filter_var, command=self.controller.toggle_owner_filter)
+        self.filter_checkbox = tk.Checkbutton(self, text="Filter by Selected Owner", variable=self.filter_var, command=self.controller.toggle_owner_filter)
         self.filter_checkbox.pack(pady=2, anchor="w")
 
 
@@ -67,9 +67,9 @@ class TaskView(tk.Frame):
         # Row for done and delete buttons
         action_row = tk.Frame(self)
         action_row.pack(pady=2, fill="x")
-        self.done_button = tk.Button(action_row, text="Set Selected Task to Done", command=self.controller.set_task_done)
+        self.done_button = tk.Button(action_row, text="Set Task to Done", command=self.controller.set_task_done)
         self.done_button.pack(side=tk.LEFT, padx=2)
-        self.delete_button = tk.Button(action_row, text="Delete Selected Task", command=self.controller.delete_task)
+        self.delete_button = tk.Button(action_row, text="Delete Task", command=self.controller.delete_task)
         self.delete_button.pack(side=tk.RIGHT, padx=2, anchor="e")
 
 
