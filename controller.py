@@ -9,7 +9,7 @@ from datetime import datetime
 
 class TaskController:
     """
-    Controller for the To-Do List GUI application.
+    Controller for the To-Do List GUI application..
 
     Connects the model and view, and handles user interactions.
     """
