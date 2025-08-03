@@ -50,8 +50,8 @@ class TaskController:
         if hasattr(self.view, 'owner_var') and self.view.owner_var:
             try:
                 # Get all trace callbacks and remove them
-                for trace_id in self.view.owner_var.trace_vinfo():
-                    self.view.owner_var.trace_vdelete('w', trace_id[0])
+                for trace_id in self.view.owner_var.trace_info():
+                    self.view.owner_var.trace_remove('write', trace_id[0])
             except (AttributeError, tk.TclError):
                 # Ignore errors if traces are already removed or widget is destroyed
                 pass
