@@ -8,6 +8,17 @@ from tkinter import messagebox
 from datetime import datetime
 
 class TaskController:
+    def show_info(self) -> None:
+        """
+        Display application information in a message box.
+        """
+        info_text = (
+            "To-Do List GUI\n"
+            "Version 1.0\n\n"
+            "A simple task management application\n"
+            "built with Python and Tkinter using MVC architecture."
+        )
+        messagebox.showinfo("About", info_text)
     """
     Controller for the To-Do List GUI application.
 

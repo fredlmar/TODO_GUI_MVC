@@ -41,6 +41,17 @@ class TaskView(tk.Frame):
         # Add minimal left/right border, anchor all to west (left)
         self.pack(padx=(8,8), pady=20, anchor="w")
 
+        # Add menu bar
+        self._create_menu_bar()
+    def _create_menu_bar(self):
+        self.menubar = tk.Menu(self.master)
+        self.master.config(menu=self.menubar)
+
+        # Info menu
+        info_menu = tk.Menu(self.menubar, tearoff=0)
+        self.menubar.add_cascade(label="Info", menu=info_menu)
+        info_menu.add_command(label="About", command=self.controller.show_info)
+
         # Task entry row
         entry_row = tk.Frame(self)
         entry_row.pack(pady=2, fill="x")
@@ -57,7 +68,7 @@ class TaskView(tk.Frame):
         tk.Label(owner_row, text="Owner:").pack(side=tk.LEFT)
 
         # Initialize owner options from file/model
-        self.owner_options = controller.model.owners.copy()
+        self.owner_options = self.controller.model.owners.copy()
         owner_menu_values = self.owner_options if self.owner_options else ["No Owner"]
 
         self.owner_var = tk.StringVar()
